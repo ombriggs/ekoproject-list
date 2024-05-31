@@ -41,7 +41,7 @@
 
   const renamePhoto = (newName: string) => {
     photos = photos.map((photo, indx) => {
-      if (indx === selectedIndex && photo.name !== newName) {
+      if (indx === selectedPhotos[0].index && photo.name !== newName) {
         photo = {...photo, name: newName}
       }
       return photo
