@@ -1,6 +1,6 @@
 <script lang="ts">
   import "./app.css";
-  import { Trash2, Plus, TriangleAlert, ChevronDown } from "lucide-svelte";
+  import { Trash2, Plus, TriangleAlert, ChevronDown, ChevronUp } from "lucide-svelte";
   import ac from "./assets/air-conditioning.jpg";
 
   type Photo = {
@@ -17,10 +17,6 @@
   const getDisplayName = (photo: Photo) => {
     return `C:\\\\work\\\\ekotrope\\\\photos\\\\${photo.name}`
   };
-
-  const getSelectedPhotos = (): Photo[] => {
-    return photos.filter(photo => photo.isSelected);
-  }
 
   const onRenameFormSubmit = () => {
     if (newPhotoName.toString().trim().length !== 0) {
@@ -58,6 +54,7 @@
     photos = photos.filter((phto) => phto.index !== currIndx);
   }
 
+
   let photos: Photo[] = Array(27);
   let selectedIndex: number = -1;
   let newPhotoName: string = "";
@@ -75,6 +72,8 @@
   });
 
   $: selectedPhotos = photos.filter(photo => photo.isSelected);
+  $: showWaterHeaters = true;
+  $: showExteriorInsulations = true;
 </script>
 
 <main class="flex flex-row  text-slate-200 px-4 h-screen items-start justify-evenly">
@@ -121,16 +120,36 @@
             <button class=" bg-slate-700 w-fit rounded-lg p-1 border-2 border-black hover:border-gray-500" on:click={showProductTagOptions}>
               <Plus size="20" />
             </button>
-            <div class:invisible={!photos[selectedIndex].showProductTags} class="pt-1">
-              <div class=" bg-slate-50 flex flex-col text-black rounded-lg w-fit px-4 py-2 items-start justify-center text-center">
-                <button class="flex justify-start items-center text-center hover:bg-gray-500 w-full hover:rounded-lg pl-2">
-                  <div class="font-semibold">Water Heaters</div>
-                  <ChevronDown />
-                </button>
-                <button class="flex justify-start items-center text-center hover:bg-gray-500 w-full hover:rounded-lg pl-2">
-                  <div class="font-semibold">Exterior Insulation</div>
-                  <ChevronDown />
-                </button>
+            <div class:invisible={!photos[selectedIndex].showProductTags} class="mt-1 w-3/4">
+              <div class=" bg-slate-50 flex flex-col text-black rounded-lg w-full text-lg p-4">
+                  <button class="flex items-end justify-between font-bold hover:bg-gray-600 hover:bg-opacity-20 w-full p-1 rounded-md" on:click={() => showWaterHeaters = !showWaterHeaters}>
+                    <span>Water Heaters</span>
+                    {#if showWaterHeaters}
+                    <ChevronUp />
+                    {:else}
+                    <ChevronDown />
+                    {/if}
+                  </button>
+                  {#if showWaterHeaters}
+                    <div class="flex flex-col w-full">
+                      <button class="w-full hover:bg-green-600 hover:bg-opacity-20 p-1 rounded-md text-start" on:click={(e) => console.log(e)}>Rinnai Tankless Gas WH (1) $40</button>
+                      <button class="w-full hover:bg-green-600 hover:bg-opacity-20 p-1 rounded-md text-start">HPWH $20</button>
+                    </div>
+                  {/if}
+                  <button class="flex items-end justify-between font-bold hover:bg-gray-600 hover:bg-opacity-20 w-full p-1 rounded-md" on:click={() => showExteriorInsulations = !showExteriorInsulations}>
+                    <span>Exterior Insulation</span>
+                    {#if showExteriorInsulations}
+                    <ChevronUp />
+                    {:else}
+                    <ChevronDown />
+                    {/if}
+                  </button>
+                  {#if showExteriorInsulations}
+                  <div class="flex flex-col items-start text-start w-full">
+                    <button class="w-full hover:bg-green-600 hover:bg-opacity-20 p-1 rounded-md text-start">BASF Rigid Insulation</button>
+                    <button class="w-full hover:bg-green-600 hover:bg-opacity-20 p-1 rounded-md text-start">OX Insulated Sheathing (1)</button>
+                  </div>
+                  {/if}
               </div>
             </div>
           </div>
