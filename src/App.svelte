@@ -97,7 +97,7 @@
   
   
   {#if selectedPhotos.length > 0}
-    <div class="flex flex-col pt-8 items-center justify-center gap-2" class:hidden={selectedPhotos.length === 0}>
+    <div class="flex flex-col pt-8 items-center justify-center gap-2 sticky top-0" class:hidden={selectedPhotos.length === 0}>
       <div class=" text-xl font-bold self-start">Tags</div>
       <div class=" flex flex-col gap-2">
         <div class="flex flex-col gap-1" class:invisible={selectedPhotos.length > 1}>
