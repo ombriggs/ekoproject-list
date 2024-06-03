@@ -57,11 +57,10 @@
 
   const addTag = (e: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement}) => {
     const val = e.currentTarget.value;
-    selectedPhotos.forEach(photo => {
-      const productTags: string[] = photo.productTags;
-      if (productTags.indexOf(val) === -1) {
-        productTags.push(val);
-        photo.productTags = productTags;
+    selectedPhotos.forEach(currPhoto => {
+      let photoObj = photos.filter(photo => photo.index === currPhoto.index)[0];
+      if (photoObj.productTags.indexOf(val) === -1) {
+        photoObj.productTags = [...photoObj.productTags, val]
       }
     });
     selectedPhotos = selectedPhotos;
@@ -70,9 +69,7 @@
   const removeTag = (tag: string) => {
     selectedPhotos.forEach(photo => {
       let productTags: string[] = photo.productTags;
-      console.log(productTags)
       productTags = productTags.filter(currTag => currTag !== tag);
-      console.log(productTags)
       photo.productTags = productTags;
     });
     selectedPhotos = selectedPhotos;
