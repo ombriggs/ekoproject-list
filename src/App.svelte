@@ -79,7 +79,7 @@
 <main class="flex flex-row  text-slate-200 px-4 h-screen items-start justify-evenly">
   <div class="flex flex-wrap gap-4 items-center justify-center w-3/4 basis-2/4 pt-8">
     {#each photos as photo, indx (photo)}
-      <button class="relative w-[250px] rounded-md p-1 m-0 overflow-hidden group" on:click={() => showSidePanel(indx)} class:highlighted={photos[indx].isSelected}>
+      <button class="relative w-[250px] rounded-md p-1 m-0 overflow-hidden group transition-all hover:scale-110 hover:outline outline-2 outline-gray-400" on:click={() => showSidePanel(indx)} class:highlighted={photos[indx].isSelected}>
         <div class="relative rounded-md">
           <img alt="Air conditioner" src={ac} class="w-full rounded-md transition-opacity duration-300 group-hover:opacity-60" />
           <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 pointer-events-none">
