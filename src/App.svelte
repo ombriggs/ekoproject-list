@@ -2,6 +2,7 @@
   import "./app.css";
   import { Trash2, Plus, TriangleAlert, ChevronDown, ChevronUp } from "lucide-svelte";
   import ac from "./assets/air-conditioning.jpg";
+  import Tag from "./lib/Tag.svelte";
 
   type Photo = {
     name: string;
@@ -52,6 +53,29 @@
 
   const deletePhoto = (currIndx: number) => {
     photos = photos.filter((phto) => phto.index !== currIndx);
+  };
+
+  const addTag = (e: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement}) => {
+    const val = e.currentTarget.value;
+    selectedPhotos.forEach(photo => {
+      const productTags: string[] = photo.productTags;
+      if (productTags.indexOf(val) === -1) {
+        productTags.push(val);
+        photo.productTags = productTags;
+      }
+    });
+    selectedPhotos = selectedPhotos;
+  }
+
+  const removeTag = (tag: string) => {
+    selectedPhotos.forEach(photo => {
+      let productTags: string[] = photo.productTags;
+      console.log(productTags)
+      productTags = productTags.filter(currTag => currTag !== tag);
+      console.log(productTags)
+      photo.productTags = productTags;
+    });
+    selectedPhotos = selectedPhotos;
   }
 
 
@@ -96,9 +120,9 @@
   
   
   {#if selectedPhotos.length > 0}
-    <div class="flex flex-col pt-8 items-center justify-center gap-2 sticky top-0" class:hidden={selectedPhotos.length === 0}>
+    <div class="flex flex-col pt-8 items-center justify-center gap-2 sticky top-0 w-[500px]" class:hidden={selectedPhotos.length === 0}>
       <div class=" text-xl font-bold self-start">Tags</div>
-      <div class=" flex flex-col gap-2">
+      <div class=" flex flex-col gap-2 self-start">
         <div class="flex flex-col gap-1" class:invisible={selectedPhotos.length > 1}>
           <img alt="An air conditioner" src={ac} class="rounded-lg h-fit w-[500px] self-center" />
           <span>{getDisplayName(selectedPhotos[0])}</span>
@@ -117,9 +141,16 @@
 
           <div class="flex flex-col gap-1">
             <span class="font-semibold">Product Tags (Up to $20 in rebates available):</span>
-            <button class=" bg-slate-700 w-fit rounded-lg p-1 border-2 border-black hover:border-gray-500" on:click={showProductTagOptions}>
-              <Plus size="20" />
-            </button>
+            <div class="flex">
+              <div class="flex gap-2 flex-wrap">
+                {#each selectedPhotos[0].productTags as productTag (productTag)}
+                  <Tag on:click={() => removeTag(productTag)}>{productTag}</Tag>
+                {/each}
+              </div>
+              <button class="bg-slate-700 size-8 rounded-lg p-1 border-2 border-black hover:border-gray-500" on:click={showProductTagOptions}>
+                <Plus size="20" />
+              </button>
+            </div>
             <div class:invisible={!photos[selectedIndex].showProductTags} class="mt-1 w-3/4">
               <div class=" bg-slate-50 flex flex-col text-black rounded-lg w-full text-lg p-4">
                   <button class="flex items-end justify-between font-bold hover:bg-gray-600 hover:bg-opacity-20 w-full p-1 rounded-md" on:click={() => showWaterHeaters = !showWaterHeaters}>
@@ -132,8 +163,8 @@
                   </button>
                   {#if showWaterHeaters}
                     <div class="flex flex-col w-full">
-                      <button class="w-full hover:bg-green-600 hover:bg-opacity-20 p-1 rounded-md text-start" on:click={(e) => console.log(e)}>Rinnai Tankless Gas WH (1) $40</button>
-                      <button class="w-full hover:bg-green-600 hover:bg-opacity-20 p-1 rounded-md text-start">HPWH $20</button>
+                      <button class="w-full hover:bg-green-600 hover:bg-opacity-20 p-1 rounded-md text-start truncate" value="Rinnai" on:click={addTag}>Rinnai Tankless Gas WH (1) $40</button>
+                      <button class="w-full hover:bg-green-600 hover:bg-opacity-20 p-1 rounded-md text-start truncate" value="HPWH" on:click={addTag}>HPWH $20</button>
                     </div>
                   {/if}
                   <button class="flex items-end justify-between font-bold hover:bg-gray-600 hover:bg-opacity-20 w-full p-1 rounded-md" on:click={() => showExteriorInsulations = !showExteriorInsulations}>
@@ -146,8 +177,8 @@
                   </button>
                   {#if showExteriorInsulations}
                   <div class="flex flex-col items-start text-start w-full">
-                    <button class="w-full hover:bg-green-600 hover:bg-opacity-20 p-1 rounded-md text-start">BASF Rigid Insulation</button>
-                    <button class="w-full hover:bg-green-600 hover:bg-opacity-20 p-1 rounded-md text-start">OX Insulated Sheathing (1)</button>
+                    <button class="w-full hover:bg-green-600 hover:bg-opacity-20 p-1 rounded-md text-start truncate" value="BASF" on:click={addTag}>BASF Rigid Insulation</button>
+                    <button class="w-full hover:bg-green-600 hover:bg-opacity-20 p-1 rounded-md text-start truncate" value="OX" on:click={addTag}>OX Insulated Sheathing (1)</button>
                   </div>
                   {/if}
               </div>
