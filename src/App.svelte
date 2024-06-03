@@ -86,6 +86,13 @@
     selectedPhotos = selectedPhotos;
   }
 
+  const toNaturalLang = (words: string[]) => {
+    if (words.length === 0) return '';
+    if (words.length === 1) return words[0];
+    if (words.length === 2) return words.join(' and ');
+    return words.slice(0, -1).join(', ') + ', and ' + words[words.length - 1];
+  }
+
 
   let photos: Photo[] = Array(27);
   let selectedIndex: number = -1;
@@ -111,6 +118,7 @@
 <main class="flex flex-row  text-slate-200 px-4 h-screen items-start justify-evenly  overflow-y-auto">
   <div class="flex flex-wrap gap-4 items-center justify-center w-3/4 basis-2/4 pt-8">
     {#each photos as photo, indx (photo)}
+    <div>
       <button class="relative w-[250px] rounded-md p-1 m-0 overflow-hidden group transition-all hover:scale-110 hover:outline outline-2 outline-gray-400" on:click={() => showSidePanel(indx)}>
         <div class="relative rounded-md">
           <img alt="Air conditioner" src={ac} class="w-full rounded-md transition-opacity duration-300 group-hover:opacity-60" />
@@ -129,7 +137,8 @@
           </button>
         </div>
       </button>
-      
+      <div>Tags: {toNaturalLang(photo.productTags)}</div>
+    </div>
     {/each}
   </div>
   
