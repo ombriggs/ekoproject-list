@@ -1,8 +1,9 @@
 <script lang="ts">
   import "./app.css";
-  import { Trash2, Plus, TriangleAlert, ChevronDown, ChevronUp } from "lucide-svelte";
+  import { Trash2, Plus, TriangleAlert, ChevronDown, ChevronUp, Check } from "lucide-svelte";
   import ac from "./assets/air-conditioning.jpg";
   import Tag from "./lib/Tag.svelte";
+  import { scale, slide } from "svelte/transition";
 
   type Photo = {
     name: string;
@@ -46,6 +47,16 @@
   };
 
   const showSidePanel = (currIndx: number) => {
+    const selectedPhotosSize = photos.filter(photo => photo.isSelected).length;
+    const oldVal: boolean = photos[currIndx].isSelected;
+    photos.forEach(photo => photo.isSelected = false);
+    photos = photos;
+    photos[currIndx].isSelected = selectedPhotosSize > 1? true : !oldVal;
+    selectedIndex = currIndx;
+    newPhotoName = "";
+  };
+
+  const showSidePanelMulti = (currIndx: number) => {
     photos[currIndx].isSelected = !photos[currIndx].isSelected;
     selectedIndex = currIndx;
     newPhotoName = "";
@@ -100,9 +111,16 @@
 <main class="flex flex-row  text-slate-200 px-4 h-screen items-start justify-evenly">
   <div class="flex flex-wrap gap-4 items-center justify-center w-3/4 basis-2/4 pt-8">
     {#each photos as photo, indx (photo)}
-      <button class="relative w-[250px] rounded-md p-1 m-0 overflow-hidden group transition-all hover:scale-110 hover:outline outline-2 outline-gray-400" on:click={() => showSidePanel(indx)} class:highlighted={photos[indx].isSelected}>
+      <button class="relative w-[250px] rounded-md p-1 m-0 overflow-hidden group transition-all hover:scale-110 hover:outline outline-2 outline-gray-400" on:click={() => showSidePanel(indx)}>
         <div class="relative rounded-md">
           <img alt="Air conditioner" src={ac} class="w-full rounded-md transition-opacity duration-300 group-hover:opacity-60" />
+          <button class="absolute bg-white top-1 left-2 border-2 border-black rounded-md text-green-600 size-8" on:click|stopPropagation={() => showSidePanelMulti(indx)}>
+            {#if photos[indx].isSelected}  
+            <div class="w-fit h-fit" in:scale out:scale>
+              <Check size="28"/>
+            </div>
+            {/if}
+          </button>
           <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 pointer-events-none">
             <span class="text-white pointer-events-none">$20 available rebates</span>
           </div>
@@ -117,7 +135,7 @@
   
   
   {#if selectedPhotos.length > 0}
-    <div class="flex flex-col pt-8 items-center justify-center gap-2 sticky top-0 w-[500px]" class:hidden={selectedPhotos.length === 0}>
+    <div class="flex flex-col pt-8 items-center justify-center gap-2 sticky top-0 w-[500px]" class:hidden={selectedPhotos.length === 0} in:slide={{axis: 'x', duration: 600}} out:slide={{axis: 'x', duration: 600}}>
       <div class=" text-xl font-bold self-start">Tags</div>
       <div class=" flex flex-col gap-2 self-start">
         <div class="flex flex-col gap-1" class:invisible={selectedPhotos.length > 1}>
@@ -213,9 +231,5 @@
 
   .invisible {
     display: none;
-  }
-
-  .highlighted {
-    outline: 2px solid green;
   }
 </style>
