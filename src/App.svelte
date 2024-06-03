@@ -108,7 +108,7 @@
   $: showExteriorInsulations = true;
 </script>
 
-<main class="flex flex-row  text-slate-200 px-4 h-screen items-start justify-evenly">
+<main class="flex flex-row  text-slate-200 px-4 h-screen items-start justify-evenly  overflow-y-auto">
   <div class="flex flex-wrap gap-4 items-center justify-center w-3/4 basis-2/4 pt-8">
     {#each photos as photo, indx (photo)}
       <button class="relative w-[250px] rounded-md p-1 m-0 overflow-hidden group transition-all hover:scale-110 hover:outline outline-2 outline-gray-400" on:click={() => showSidePanel(indx)}>
