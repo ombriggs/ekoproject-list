@@ -1,9 +1,9 @@
 <script lang="ts">
   import "./app.css";
-  import { Trash2, Plus, TriangleAlert, ChevronDown, ChevronUp, Check } from "lucide-svelte";
+  import { Trash2, Plus, TriangleAlert, ChevronDown, ChevronUp, Check, TagIcon } from "lucide-svelte";
   import ac from "./assets/air-conditioning.jpg";
   import Tag from "./lib/Tag.svelte";
-  import { scale, slide } from "svelte/transition";
+  import { fade, scale, slide } from "svelte/transition";
 
   type Photo = {
     name: string;
@@ -118,8 +118,8 @@
 <main class="flex flex-row  text-slate-200 px-4 h-screen items-start justify-evenly  overflow-y-auto">
   <div class="flex flex-wrap gap-4 items-center justify-center w-3/4 basis-2/4 pt-8">
     {#each photos as photo, indx (photo)}
-    <div>
-      <button class="relative w-[250px] rounded-md p-1 m-0 overflow-hidden group transition-all hover:scale-110 hover:outline outline-2 outline-gray-400" on:click={() => showSidePanel(indx)}>
+    <div class="flex flex-col max-w-[250px]">
+      <button class="relative w-[250px] rounded-md p-1 m-0 overflow-hidden group peer transition-all hover:scale-110 hover:outline outline-2 outline-gray-400" on:click={() => showSidePanel(indx)} out:fade={{duration: 700}}>
         <div class="relative rounded-md">
           <img alt="Air conditioner" src={ac} class="w-full rounded-md transition-opacity duration-300 group-hover:opacity-60" />
           <button class="absolute bg-white top-1 left-2 border-2 border-black rounded-md text-green-600 size-8" on:click|stopPropagation={() => showSidePanelMulti(indx)}>
@@ -137,7 +137,11 @@
           </button>
         </div>
       </button>
-      <div>Tags: {toNaturalLang(photo.productTags)}</div>
+      <div class="flex gap-1 pt-2 justify-start items-end">
+        <TagIcon size="20" />
+        <span class="font-bold">Tags: </span>
+        <span class="text-sm">{toNaturalLang(photo.productTags)}</span>
+      </div>
     </div>
     {/each}
   </div>
