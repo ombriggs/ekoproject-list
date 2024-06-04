@@ -3,7 +3,7 @@
   import { Trash2, Plus, TriangleAlert, ChevronDown, ChevronUp, Check, TagIcon } from "lucide-svelte";
   import ac from "./assets/air-conditioning.jpg";
   import Tag from "./lib/Tag.svelte";
-  import { fade, scale, slide } from "svelte/transition";
+  import { fade, fly, scale, slide } from "svelte/transition";
 
   type Photo = {
     name: string;
@@ -137,7 +137,7 @@
           </button>
         </div>
       </button>
-      <div class="flex gap-1 pt-2 justify-start items-end">
+      <div class="flex gap-1 pt-2 justify-start items-end peer-hover:scale-110">
         <TagIcon size="20" />
         <span class="font-bold">Tags: </span>
         <span class="text-sm">{toNaturalLang(photo.productTags)}</span>
@@ -154,6 +154,19 @@
         <div class="flex flex-col gap-1" class:invisible={selectedPhotos.length > 1}>
           <img alt="An air conditioner" src={ac} class="rounded-lg h-fit w-[500px] self-center" />
           <span>{getDisplayName(selectedPhotos[0])}</span>
+        </div>
+
+        <div class=" flex" class:invisible={selectedPhotos.length === 1}>
+          {#if selectedPhotos.length < 6}
+            {#each selectedPhotos as _}
+              <img alt="An air conditioner" src={ac} class="rounded-full size-24 border-2 border-black -ml-5" in:fly />
+            {/each}
+          {:else}
+            {#each selectedPhotos.slice(0, 5) as _}
+              <img alt="An air conditioner" src={ac} class="rounded-full size-24 border-2 border-black -ml-5" />
+            {/each}
+            <div class="rounded-full size-24 bg-gray-600 flex items-center justify-center font-bold text-lg ml-2" in:fly>+{selectedPhotos.length - 5} more</div>
+          {/if}
         </div>
 
         <div class="flex flex-col gap-4">
