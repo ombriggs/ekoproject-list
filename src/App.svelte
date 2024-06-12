@@ -236,7 +236,7 @@
 
         <form class="flex items-center justify-between pt-4" class:invisible={selectedPhotos.length > 1} on:submit|preventDefault={onRenameFormSubmit}>
             <input type="text" placeholder="Rename photo..." id="rename" class="p-2 rounded-lg" bind:value={newPhotoName}>
-            <button  type="submit" class="bg-green-600 py-[4.5px] px-2 rounded-lg">Submit</button>
+            <button  type="submit" class="bg-green-600 py-[4.5px] px-2 rounded-lg">Rename</button>
         </form>
         
         <button class="self-end" on:click={() => selectedPhotos.forEach(photo => deletePhoto(photo.index))}>
