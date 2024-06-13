@@ -16,6 +16,24 @@
     customTags: string[];
   };
 
+  let renameInputElement: HTMLInputElement;
+  let photos: Photo[] = Array(27);
+  let selectedIndex: number = -1;
+  let newPhotoName: string = "";
+
+  photos = photos.fill({
+    name: "", 
+    index: 0,
+    isSelected: false, 
+    showProductTags: false, 
+    showRebates: false, 
+    hersTags: [], 
+    customTags: [], 
+    productTags: []
+  }).map((photo, indx) => {
+    return {...photo, name: `air_conditioner_${indx}`, index: indx}
+  });
+
   const getDisplayName = (photo: Photo) => {
     return `C:\\\\work\\\\ekotrope\\\\photos\\\\${photo.name}`
   };
@@ -24,10 +42,7 @@
     if (newPhotoName.toString().trim().length !== 0) {
       renamePhoto(newPhotoName.toString());
       newPhotoName = "";
-      const elem = document.getElementById("rename");
-      if (elem) {
-        elem.focus();
-      }
+      renameInputElement.focus();
     }
   }
 
@@ -40,7 +55,7 @@
   const renamePhoto = (newName: string) => {
     photos = photos.map((photo, indx) => {
       if (indx === selectedPhotos[0].index && photo.name !== newName) {
-        photo = {...photo, name: newName}
+        photo.name = newName;
       }
       return photo
     });
@@ -92,23 +107,6 @@
     if (words.length === 2) return words.join(' and ');
     return words.slice(0, -1).join(', ') + ', and ' + words[words.length - 1];
   }
-
-
-  let photos: Photo[] = Array(27);
-  let selectedIndex: number = -1;
-  let newPhotoName: string = "";
-  photos = photos.fill({
-    name: "", 
-    index: 0,
-    isSelected: false, 
-    showProductTags: false, 
-    showRebates: false, 
-    hersTags: [], 
-    customTags: [], 
-    productTags: []
-  }).map((photo, indx) => {
-    return {...photo, name: `air_conditioner_${indx}`, index: indx}
-  });
 
   $: selectedPhotos = photos.filter(photo => photo.isSelected);
   $: showWaterHeaters = true;
@@ -235,7 +233,7 @@
         </div>
 
         <form class="flex items-center justify-between pt-4" class:invisible={selectedPhotos.length > 1} on:submit|preventDefault={onRenameFormSubmit}>
-            <input type="text" placeholder="Rename photo..." id="rename" class="p-2 rounded-lg" bind:value={newPhotoName}>
+            <input type="text" placeholder="Rename photo..." id="rename" class="p-2 rounded-lg" bind:value={newPhotoName} bind:this={renameInputElement}>
             <button  type="submit" class="bg-green-600 py-[4.5px] px-2 rounded-lg">Rename</button>
         </form>
         
