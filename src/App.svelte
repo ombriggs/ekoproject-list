@@ -181,14 +181,14 @@
           <div class="flex flex-col gap-1">
             <span class="font-semibold">Product Tags (Up to $20 in rebates available):</span>
             <div class="flex">
+              <button class="bg-slate-700 size-8 rounded-lg p-1 border-2 border-black hover:border-gray-500 mr-2" on:click={showProductTagOptions}>
+                <Plus size="20" />
+              </button>
               <div class="flex gap-2 flex-wrap">
                 {#each selectedPhotos[0].productTags as productTag (productTag)}
                   <Tag on:click={() => removeTag(productTag)}>{productTag}</Tag>
                 {/each}
               </div>
-              <button class="bg-slate-700 size-8 rounded-lg p-1 border-2 border-black hover:border-gray-500" on:click={showProductTagOptions}>
-                <Plus size="20" />
-              </button>
             </div>
             <div class:invisible={!photos[selectedIndex].showProductTags} class="mt-1 w-3/4">
               <div class=" bg-slate-50 flex flex-col text-black rounded-lg w-full text-lg p-4">
