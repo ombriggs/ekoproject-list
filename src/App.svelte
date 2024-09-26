@@ -1,256 +1,161 @@
 <script lang="ts">
-  import "./app.css";
-  import { Trash2, Plus, TriangleAlert, ChevronDown, ChevronUp, Check, TagIcon } from "lucide-svelte";
-  import ac from "./assets/air-conditioning.jpg";
-  import Tag from "./lib/Tag.svelte";
-  import { fade, fly, scale, slide } from "svelte/transition";
+  import { Info, EllipsisVertical, Copy, Trash2, Forward } from "lucide-svelte";
 
-  type Photo = {
-    name: string;
-    index: number;
-    isSelected: boolean;
-    showProductTags: boolean;
-    showRebates: boolean;
-    hersTags: string[];
-    productTags: string[];
-    customTags: string[];
+  type Project = {
+    projectName: string;
+    raterOfRecord: string;
+    builder: string;
+    address: string;
+    status: string;
+    qaTypes: string;
+    qaStatus: string;
+    visible: boolean;
   };
 
-  let renameInputElement: HTMLInputElement;
-  let photos: Photo[] = Array(27);
-  let selectedIndex: number = -1;
-  let newPhotoName: string = "";
-
-  photos = photos.fill({
-    name: "", 
-    index: 0,
-    isSelected: false, 
-    showProductTags: false, 
-    showRebates: false, 
-    hersTags: [], 
-    customTags: [], 
-    productTags: []
-  }).map((photo, indx) => {
-    return {...photo, name: `air_conditioner_${indx}`, index: indx}
-  });
-
-  const getDisplayName = (photo: Photo) => {
-    return `C:\\\\work\\\\ekotrope\\\\photos\\\\${photo.name}`
-  };
-
-  const onRenameFormSubmit = () => {
-    if (newPhotoName.toString().trim().length !== 0) {
-      renamePhoto(newPhotoName.toString());
-      newPhotoName = "";
-      renameInputElement.focus();
+  const projects: Project[] = [
+    {
+      projectName: "Real Project 1",
+      raterOfRecord: "Owanari Briggs",
+      builder: "Ekotrope",
+      address: "1234 Real St.",
+      status: "Registered",
+      qaTypes: "",
+      qaStatus: "",
+      visible: false
+    },
+    {
+      projectName: "Real Project 2",
+      raterOfRecord: "Owanari Briggs",
+      builder: "Ekotrope",
+      address: "12345 Real St.",
+      status: "Unregistered",
+      qaTypes: "",
+      qaStatus: "",
+      visible: false
+    },
+    {
+      projectName: "Real Project 3",
+      raterOfRecord: "Owanari Briggs",
+      builder: "Ekotrope",
+      address: "4321 Real St.",
+      status: "Registered",
+      qaTypes: "",
+      qaStatus: "",
+      visible: false
+    },
+    {
+      projectName: "Real Project 4",
+      raterOfRecord: "Owanari Briggs",
+      builder: "Ekotrope",
+      address: "54321 Real St.",
+      status: "Unregistered",
+      qaTypes: "",
+      qaStatus: "",
+      visible: false
+    },
+    {
+      projectName: "Longer Real Project 5",
+      raterOfRecord: "Owanari Briggs",
+      builder: "Ekotrope",
+      address: "2431 Real St.",
+      status: "Registered",
+      qaTypes: "",
+      qaStatus: "",
+      visible: false
     }
-  }
-
-  const showProductTagOptions = () => {
-    const currPhoto: Photo = photos[selectedIndex];
-    currPhoto.showProductTags = !currPhoto.showProductTags;
-    photos[selectedIndex] = currPhoto;
-  }
-
-  const renamePhoto = (newName: string) => {
-    photos = photos.map((photo, indx) => {
-      if (indx === selectedPhotos[0].index && photo.name !== newName) {
-        photo.name = newName;
-      }
-      return photo
-    });
-  };
-
-  const showSidePanel = (currIndx: number) => {
-    const selectedPhotosSize = photos.filter(photo => photo.isSelected).length;
-    const oldVal: boolean = photos[currIndx].isSelected;
-    photos.forEach(photo => photo.isSelected = false);
-    photos = photos;
-    photos[currIndx].isSelected = selectedPhotosSize > 1? true : !oldVal;
-    selectedIndex = currIndx;
-    newPhotoName = "";
-  };
-
-  const showSidePanelMulti = (currIndx: number) => {
-    photos[currIndx].isSelected = !photos[currIndx].isSelected;
-    selectedIndex = currIndx;
-    newPhotoName = "";
-  };
-
-  const deletePhoto = (currIndx: number) => {
-    photos = photos.filter((phto) => phto.index !== currIndx);
-  };
-
-  const addTag = (e: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement}) => {
-    const val = e.currentTarget.value;
-    selectedPhotos.forEach(currPhoto => {
-      let photoObj = photos.filter(photo => photo.index === currPhoto.index)[0];
-      if (photoObj.productTags.indexOf(val) === -1) {
-        photoObj.productTags = [...photoObj.productTags, val]
-      }
-    });
-    selectedPhotos = selectedPhotos;
-  }
-
-  const removeTag = (tag: string) => {
-    selectedPhotos.forEach(photo => {
-      let productTags: string[] = photo.productTags;
-      productTags = productTags.filter(currTag => currTag !== tag);
-      photo.productTags = productTags;
-    });
-    selectedPhotos = selectedPhotos;
-  }
-
-  const toNaturalLang = (words: string[]) => {
-    if (words.length === 0) return '';
-    if (words.length === 1) return words[0];
-    if (words.length === 2) return words.join(' and ');
-    return words.slice(0, -1).join(', ') + ', and ' + words[words.length - 1];
-  }
-
-  $: selectedPhotos = photos.filter(photo => photo.isSelected);
-  $: showWaterHeaters = true;
-  $: showExteriorInsulations = true;
+  ]
 </script>
 
-<main class="flex flex-row  text-slate-200 px-4 h-screen items-start justify-evenly  overflow-y-auto">
-  <div class="flex flex-wrap gap-4 items-center justify-center w-3/4 basis-2/4 pt-8">
-    {#each photos as photo, indx (photo)}
-    <div class="flex flex-col max-w-[250px]">
-      <button class="relative w-[250px] rounded-md p-1 m-0 overflow-hidden group peer transition-all hover:scale-110 hover:outline outline-2 outline-gray-400" on:click={() => showSidePanel(indx)} out:fade={{duration: 700}}>
-        <div class="relative rounded-md">
-          <img alt="Air conditioner" src={ac} class="w-full rounded-md transition-opacity duration-300 group-hover:opacity-60" />
-          <button class="absolute bg-white top-1 left-2 border-2 border-black rounded-md text-green-600 size-8" on:click|stopPropagation={() => showSidePanelMulti(indx)}>
-            {#if photos[indx].isSelected}  
-            <div class="w-fit h-fit" in:scale out:scale>
-              <Check size="28"/>
-            </div>
-            {/if}
+<main class=" text-black w-full">
+  <table class=" w-full mt-4 border-separate border-spacing-y-1">
+    <thead>
+      <tr class="bg-[#005a76] text-white">
+        <th></th>
+        <th></th>
+        <th></th>
+        <th>Project Name</th>
+        <th>Builder</th>
+        <th>Open</th>
+        <th></th>
+      </tr>
+    </thead>
+    
+
+    <tbody>
+      {#each projects as project, indx}
+      <tr class="text-start align-middle bg-gray-100">
+        <td>{indx+1}</td>
+        <td>
+          <Info />
+        </td>
+        <td>
+          <input type="checkbox" />
+        </td>
+        <td>{project.projectName}</td>
+        <td>{project.builder}</td>
+        <td>
+          <button class="bg-white shadow-lg px-2 py-1 m-2 w-fit h-fit rounded-md text-[#005a76] font-bold hover:text-white focus:text-white hover:bg-blue-300 focus:bg-blue-600">
+            Open
           </button>
-          <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 pointer-events-none">
-            <span class="text-white pointer-events-none">$20 available rebates</span>
-          </div>
-          <button class="absolute bottom-2 right-2 bg-transparent border-none text-white cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:text-red-700" on:click|stopPropagation={() => deletePhoto(photo.index)}>
-            <Trash2 />
+        </td>
+        <td>
+          <button on:click={() => project.visible = !project.visible}>
+            <EllipsisVertical color="#005a76" />
           </button>
-        </div>
-      </button>
-      <div class="flex gap-1 pt-2 justify-start items-end peer-hover:scale-110">
-        <TagIcon size="20" />
-        <span class="font-bold">Tags: </span>
-        <span class="text-sm">{toNaturalLang(photo.productTags)}</span>
-      </div>
-    </div>
-    {/each}
-  </div>
-  
-  
-  {#if selectedPhotos.length > 0}
-    <div class="flex flex-col pt-8 items-center justify-center gap-2 sticky top-0 w-[500px]" class:hidden={selectedPhotos.length === 0} in:slide={{axis: 'x', duration: 600}} out:slide={{axis: 'x', duration: 600}}>
-      <div class=" text-xl font-bold self-start">Tags</div>
-      <div class=" flex flex-col gap-2 self-start">
-        <div class="flex flex-col gap-1" class:invisible={selectedPhotos.length > 1}>
-          <img alt="An air conditioner" src={ac} class="rounded-lg h-fit w-[500px] self-center" />
-          <span>{getDisplayName(selectedPhotos[0])}</span>
-        </div>
+        </td>
+      </tr>
 
-        <div class=" flex" class:invisible={selectedPhotos.length === 1}>
-          {#if selectedPhotos.length < 6}
-            {#each selectedPhotos as _}
-              <img alt="An air conditioner" src={ac} class="rounded-full size-24 border-2 border-black -ml-5" in:fly />
-            {/each}
-          {:else}
-            {#each selectedPhotos.slice(0, 5) as _}
-              <img alt="An air conditioner" src={ac} class="rounded-full size-24 border-2 border-black -ml-5" />
-            {/each}
-            <div class="rounded-full size-24 bg-gray-600 flex items-center justify-center font-bold text-lg ml-2" in:fly>+{selectedPhotos.length - 5} more</div>
-          {/if}
-        </div>
-
-        <div class="flex flex-col gap-4">
-          <div class="flex flex-col gap-1">
-            <div class="flex items-center gap-1">
-              <span class="font-semibold">HERS Required Tags (5/10):</span>
-              <TriangleAlert color="#BF9000" />
+      <tr class="bg-gray-100" class:invisible={!project.visible}>
+        <td colspan="100">
+          <div class="pl-2 py-2">
+            <div>
+              <span class="font-bold">Rater of Record:</span>
+              <span>{project.raterOfRecord}</span>
             </div>
-            <button class=" bg-slate-700 w-fit rounded-lg p-1 border-2 border-black hover:border-gray-500">
-              <Plus size="20" />
-            </button>
-          </div>
+            
+            <div>
+              <span class="font-bold">Street Address:</span>
+              <span>{project.address}</span>
+            </div>
 
-          <div class="flex flex-col gap-1">
-            <span class="font-semibold">Product Tags (Up to $20 in rebates available):</span>
-            <div class="flex">
-              <button class="bg-slate-700 size-8 rounded-lg p-1 border-2 border-black hover:border-gray-500 mr-2" on:click={showProductTagOptions}>
-                <Plus size="20" />
+            <div>
+              <span class="font-bold">Status:</span>
+              <span>{project.status}</span>
+            </div>
+
+            <div>
+              <span class="font-bold">QA Types:</span>
+              <span>{project.qaTypes}</span>
+            </div>
+
+            <div>
+              <span class="font-bold">QA Status:</span>
+              <span>{project.qaStatus}</span>
+            </div>
+            <div class="flex items-center justify-center gap-2">
+              <button class="flex px-2 py-1 bg-white rounded-md shadow-lg items-center justify-center text-[#005a76] font-bold hover:text-white focus:text-white hover:bg-blue-300 focus:bg-blue-600 gap-1">
+                <Copy />
+                <span class="font-bold">Copy</span>
               </button>
-              <div class="flex gap-2 flex-wrap">
-                {#each selectedPhotos[0].productTags as productTag (productTag)}
-                  <Tag on:click={() => removeTag(productTag)}>{productTag}</Tag>
-                {/each}
-              </div>
-            </div>
-            <div class:invisible={!photos[selectedIndex].showProductTags} class="mt-1 w-3/4">
-              <div class=" bg-slate-50 flex flex-col text-black rounded-lg w-full text-lg p-4">
-                  <button class="flex items-end justify-between font-bold hover:bg-gray-600 hover:bg-opacity-20 w-full p-1 rounded-md" on:click={() => showWaterHeaters = !showWaterHeaters}>
-                    <span>Water Heaters</span>
-                    {#if showWaterHeaters}
-                    <ChevronUp />
-                    {:else}
-                    <ChevronDown />
-                    {/if}
-                  </button>
-                  {#if showWaterHeaters}
-                    <div class="flex flex-col w-full">
-                      <button class="w-full hover:bg-green-600 hover:bg-opacity-20 p-1 rounded-md text-start truncate" value="Rinnai" on:click={addTag}>Rinnai Tankless Gas WH (1) $40</button>
-                      <button class="w-full hover:bg-green-600 hover:bg-opacity-20 p-1 rounded-md text-start truncate" value="HPWH" on:click={addTag}>HPWH $20</button>
-                    </div>
-                  {/if}
-                  <button class="flex items-end justify-between font-bold hover:bg-gray-600 hover:bg-opacity-20 w-full p-1 rounded-md" on:click={() => showExteriorInsulations = !showExteriorInsulations}>
-                    <span>Exterior Insulation</span>
-                    {#if showExteriorInsulations}
-                    <ChevronUp />
-                    {:else}
-                    <ChevronDown />
-                    {/if}
-                  </button>
-                  {#if showExteriorInsulations}
-                  <div class="flex flex-col items-start text-start w-full">
-                    <button class="w-full hover:bg-green-600 hover:bg-opacity-20 p-1 rounded-md text-start truncate" value="BASF" on:click={addTag}>BASF Rigid Insulation</button>
-                    <button class="w-full hover:bg-green-600 hover:bg-opacity-20 p-1 rounded-md text-start truncate" value="OX" on:click={addTag}>OX Insulated Sheathing (1)</button>
-                  </div>
-                  {/if}
-              </div>
+              <button class="flex px-2 py-1 bg-white rounded-md shadow-lg items-center justify-center text-[#005a76] font-bold hover:text-white focus:text-white hover:bg-blue-300 focus:bg-blue-600 gap-1">
+                <Forward />
+                <span class="font-bold">Share</span>
+              </button>
+              <button class="flex px-2 py-1 bg-white rounded-md shadow-lg items-center justify-center text-red-500 hover:bg-red-400 hover:text-white focus:bg-red-500">
+                <Trash2 />
+              </button>
             </div>
           </div>
-
-          <div class="flex flex-col gap-1">
-            <span class="font-semibold">Custom Tags:</span>
-            <button class=" bg-slate-700 w-fit rounded-lg p-1 border-2 border-black hover:border-gray-500">
-              <Plus size="20" />
-            </button>
-          </div>
-        </div>
-
-        <form class="flex items-center justify-between pt-4" class:invisible={selectedPhotos.length > 1} on:submit|preventDefault={onRenameFormSubmit}>
-            <input type="text" placeholder="Rename photo..." id="rename" class="p-2 rounded-lg" bind:value={newPhotoName} bind:this={renameInputElement}>
-            <button  type="submit" class="bg-green-600 py-[4.5px] px-2 rounded-lg">Rename</button>
-        </form>
-        
-        <button class="self-end" on:click={() => selectedPhotos.forEach(photo => deletePhoto(photo.index))}>
-          <div class="flex gap-1 bg-red-600 rounded-lg items-center justify-center py-[4.5px] px-2 font-semibold text-center">
-            <span class="text-lg">Delete</span>
-            <Trash2 />
-          </div>
-        </button>
-      </div>
-    </div>
-  {/if}
+        </td>
+      </tr>
+    {/each}
+    </tbody>    
+  </table>
 </main>
 
-<style>  
-  .hidden {
-    visibility: hidden;
+<style>
+  th {
+    padding: 8px;
   }
 
   .invisible {
