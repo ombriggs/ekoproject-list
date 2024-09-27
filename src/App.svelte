@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Info, EllipsisVertical, Copy, Trash2, Forward } from "lucide-svelte";
+  import { EllipsisVertical, Copy, Trash2, Forward } from "lucide-svelte";
 
   type Project = {
     projectName: string;
@@ -67,15 +67,14 @@
 </script>
 
 <main class=" text-black w-full">
-  <table class=" w-full mt-4 border-separate border-spacing-y-1">
+  <table class=" w-full mt-4 border-separate border-spacing-y-1 ">
     <thead>
-      <tr class="bg-[#005a76] text-white">
+      <tr class="bg-ekoblue text-white">
         <th></th>
         <th></th>
+        <th class="text-start">Project Name</th>
+        <th class="text-start">Builder</th>
         <th></th>
-        <th>Project Name</th>
-        <th>Builder</th>
-        <th>Open</th>
         <th></th>
       </tr>
     </thead>
@@ -84,24 +83,38 @@
     <tbody>
       {#each projects as project, indx}
       <tr class="text-start align-middle bg-gray-100">
-        <td>{indx+1}</td>
         <td>
-          <Info />
+          <div class="flex items-center justify-center h-full">{indx+1}</div>
         </td>
+
         <td>
-          <input type="checkbox" />
+          <div class="flex items-center justify-center h-full">
+            <input type="checkbox" class=" size-5" />
+          </div>
         </td>
-        <td>{project.projectName}</td>
-        <td>{project.builder}</td>
+
         <td>
-          <button class="bg-white shadow-lg px-2 py-1 m-2 w-fit h-fit rounded-md text-[#005a76] font-bold hover:text-white focus:text-white hover:bg-blue-300 focus:bg-blue-600">
-            Open
-          </button>
+          <div class="flex items-center justify-start h-full">{project.projectName}</div>
         </td>
+        
         <td>
-          <button on:click={() => project.visible = !project.visible}>
-            <EllipsisVertical color="#005a76" />
-          </button>
+          <div class="flex items-center justify-start h-full">{project.builder}</div>
+        </td>
+        
+        <td>
+          <div class="flex items-center justify-center h-full">
+            <button class="bg-white shadow-lg px-2 py-1 m-2 w-fit h-fit rounded-md text-ekoblue font-bold hover:text-white focus:text-white hover:bg-blue-300 focus:bg-blue-600">
+              Open
+            </button>
+          </div>
+        </td>
+        
+        <td>
+          <div class="flex items-center justify-center h-full">
+            <button on:click={() => project.visible = !project.visible}>
+              <EllipsisVertical color="#005a76" />
+            </button>
+          </div>
         </td>
       </tr>
 
@@ -133,11 +146,11 @@
               <span>{project.qaStatus}</span>
             </div>
             <div class="flex items-center justify-center gap-2">
-              <button class="flex px-2 py-1 bg-white rounded-md shadow-lg items-center justify-center text-[#005a76] font-bold hover:text-white focus:text-white hover:bg-blue-300 focus:bg-blue-600 gap-1">
+              <button class="flex px-2 py-1 bg-white rounded-md shadow-lg items-center justify-center text-ekoblue font-bold hover:text-white focus:text-white hover:bg-blue-300 focus:bg-blue-600 gap-1">
                 <Copy />
                 <span class="font-bold">Copy</span>
               </button>
-              <button class="flex px-2 py-1 bg-white rounded-md shadow-lg items-center justify-center text-[#005a76] font-bold hover:text-white focus:text-white hover:bg-blue-300 focus:bg-blue-600 gap-1">
+              <button class="flex px-2 py-1 bg-white rounded-md shadow-lg items-center justify-center text-ekoblue font-bold hover:text-white focus:text-white hover:bg-blue-300 focus:bg-blue-600 gap-1">
                 <Forward />
                 <span class="font-bold">Share</span>
               </button>
@@ -155,7 +168,7 @@
 
 <style>
   th {
-    padding: 8px;
+    padding: 8px 0px;
   }
 
   .invisible {
